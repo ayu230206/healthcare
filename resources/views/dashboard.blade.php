@@ -22,6 +22,28 @@
             display: flex;
             flex-direction: column;
             width: 100%;
+            cursor: pointer;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+        
+        .card:hover {
+            border-color: #6366f1;
+            transform: translateY(-2px);
+        }
+
+        .analysis-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease-in-out;
+            opacity: 0;
+        }
+
+        .analysis-content.active {
+            max-height: 1000px;
+            opacity: 1;
+            margin-top: 1.25rem;
+            padding-top: 1.25rem;
+            border-top: 2px dashed #f1f5f9;
         }
 
         canvas {
@@ -51,12 +73,11 @@
                 <div class="flex items-center gap-3">
                     @if(request('tahun'))
                         <a href="{{ route('dashboard.index') }}" 
-                           class="flex items-center gap-2 px-4 py-2 bg-rose-500 hover:bg-rose-600 text-white text-sm font-semibold rounded-lg shadow-sm transition-all hover:scale-105 active:scale-95">
+                           class="flex items-center gap-2 px-4 py-2 bg-rose-500 hover:bg-rose-600 text-white text-sm font-semibold rounded-lg shadow-sm transition-all">
                             Reset Filter
                         </a>
                     @endif
-                    
-                    <p class="text-xs text-slate-400 hidden md:block italic">Klik grafik batang untuk memfilter tahun</p>
+                    <p class="text-xs text-slate-400 hidden md:block italic">Klik card untuk melihat analisis mendalam</p>
                 </div>
             </div>
 
@@ -66,8 +87,7 @@
                     <p class="text-2xl font-bold text-slate-800">{{ number_format($tren->sum('total')) }}</p>
                 </div>
 
-                <a href="{{ route('billing.index') }}"
-                    class="block no-underline transition-transform hover:scale-105 active:scale-95">
+                <a href="{{ route('billing.index') }}" class="block no-underline">
                     <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-green-500 flex flex-col justify-center h-full">
                         <div class="flex justify-between items-start">
                             <div>
@@ -83,42 +103,83 @@
             </div>
 
             <div class="w-full">
-                <div class="card">
-                    <h2 class="text-lg font-semibold mb-4 text-slate-700">Tren Pasien Tahunan</h2>
+                <div class="card" onclick="toggleAnalysis('analysis-tren')">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-lg font-semibold text-slate-700">Tren Pasien Tahunan</h2>
+                        <i class="fas fa-plus-circle text-blue-500" id="icon-analysis-tren"></i>
+                    </div>
                     <div class="relative w-full h-[300px] md:h-[400px]">
                         <canvas id="chartTren"></canvas>
+                    </div>
+                    <div id="analysis-tren" class="analysis-content">
+                        <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
+                            <h4 class="font-bold text-blue-800 mb-2">💡 Analisis Tren Volume Pasien:</h4>
+                            <ul class="list-disc ml-5 text-sm text-blue-900 space-y-1">
+                                <li><b>Puncak Pertumbuhan:</b> Terjadi lonjakan signifikan dari 2019 ke 2020.</li>
+                                <li><b>Stabilitas:</b> Periode 2020-2023 menunjukkan volume yang sangat stabil (rata-rata 11rb pasien/tahun), mengindikasikan kapasitas layanan telah mencapai optimal.</li>
+                                <li><b>Laporan (2024):</b> Penurunan volume pada grafik disebabkan oleh periode laporan yang baru mencakup data hingga Mei 2024. Secara proyeksi, angka kunjungan diprediksi tetap stabil dan konsisten dengan tahun sebelumnya jika tren bulanan berjalan normal.</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
-                <div class="card">
-                    <h2 class="text-lg font-semibold mb-4 text-slate-700">Demografi Gender & Umur</h2>
+                <div class="card" onclick="toggleAnalysis('analysis-demo')">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-lg font-semibold text-slate-700">Demografi Gender & Umur</h2>
+                        <i class="fas fa-plus-circle text-pink-500" id="icon-analysis-demo"></i>
+                    </div>
                     <div class="relative w-full h-[300px] md:h-[350px]">
                         <canvas id="chartDemografi"></canvas>
                     </div>
+                    <div id="analysis-demo" class="analysis-content">
+                        <div class="bg-pink-50 p-4 rounded-lg border-l-4 border-pink-500">
+                            <h4 class="font-bold text-pink-800 mb-2">💡 Analisis Demografi:</h4>
+                            <p class="text-sm text-pink-900 leading-relaxed">
+                                Distribusi gender antara pasien laki-laki dan perempuan menunjukkan keseimbangan yang signifikan di seluruh kategori usia. Hal ini merefleksikan inklusivitas layanan kesehatan dalam menjangkau seluruh lapisan masyarakat tanpa diskriminasi gender. Strategi operasional dapat difokuskan pada optimalisasi layanan bagi kelompok usia dewasa yang merupakan basis populasi pasien terbesar.
+                            </p>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="card">
-                    <h2 class="text-lg font-semibold mb-4 text-slate-700">Proporsi Golongan Darah</h2>
+                <div class="card" onclick="toggleAnalysis('analysis-darah')">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-lg font-semibold text-slate-700">Proporsi Golongan Darah</h2>
+                        <i class="fas fa-plus-circle text-purple-500" id="icon-analysis-darah"></i>
+                    </div>
                     <div class="relative w-full h-[300px] md:h-[350px] flex justify-center items-center">
                         <canvas id="chartDarah"></canvas>
+                    </div>
+                    <div id="analysis-darah" class="analysis-content">
+                        <div class="bg-purple-50 p-4 rounded-lg border-l-4 border-purple-500">
+                            <h4 class="font-bold text-purple-800 mb-2">💡 Analisis Logistik Darah:</h4>
+                            <p class="text-sm text-purple-900 leading-relaxed">
+                                Rasio golongan darah cenderung merata. Insight ini sangat berguna bagi bagian <b>Blood Bank</b> untuk menjaga stok plasma darah tanpa terjadi penumpukan pada satu golongan darah tertentu, mengurangi risiko pembuangan stok yang kedaluwarsa.
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <div class="w-full">
-                <div class="card">
-                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+                <div class="card" onclick="toggleAnalysis('analysis-kondisi')">
+                    <div class="flex justify-between items-center mb-6">
                         <h2 class="text-lg font-semibold text-slate-700">Hasil Tes Berdasarkan Kondisi Medis</h2>
-                        <div class="flex flex-wrap gap-3 md:gap-6 text-sm font-medium">
-                            <div class="flex items-center"><span class="w-3 h-3 bg-[#5ea897] rounded-full mr-2"></span>Normal</div>
-                            <div class="flex items-center"><span class="w-3 h-3 bg-[#d4a33d] rounded-full mr-2"></span>Inconclusive</div>
-                            <div class="flex items-center"><span class="w-3 h-3 bg-[#c96f6f] rounded-full mr-2"></span>Abnormal</div>
-                        </div>
+                        <i class="fas fa-plus-circle text-teal-500" id="icon-analysis-kondisi"></i>
                     </div>
                     <div class="relative w-full h-[500px] md:h-[650px]">
                         <canvas id="chartKondisi"></canvas>
+                    </div>
+                    <div id="analysis-kondisi" class="analysis-content">
+                        <div class="bg-teal-50 p-4 rounded-lg border-l-4 border-teal-500">
+                            <h4 class="font-bold text-teal-800 mb-2">💡 Analisis Klinis Kondisi Medis:</h4>
+                            <p class="text-sm text-teal-900 mb-2">Data menunjukkan variasi hasil tes (Normal, Inconclusive, Abnormal) yang cukup dinamis di setiap penyakit.</p>
+                            <ul class="list-disc ml-5 text-sm text-teal-900">
+                                <li><b>Prioritas:</b> Kondisi medis dengan bar <i>Abnormal (Merah)</i> tertinggi memerlukan protokol penanganan pasca-tes yang lebih ketat.</li>
+                                <li><b>Efisiensi Diagnostik:</b> Tingginya hasil <i>Inconclusive</i> pada beberapa kategori menyarankan perlunya peningkatan akurasi alat tes atau prosedur pengambilan sampel.</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -127,6 +188,20 @@
     </div>
 
     <script>
+        // Fungsi Toggle Analisis dengan Animasi Ikon
+        function toggleAnalysis(id) {
+            const content = document.getElementById(id);
+            const icon = document.getElementById('icon-' + id);
+            
+            content.classList.toggle('active');
+            
+            if (content.classList.contains('active')) {
+                icon.classList.replace('fa-plus-circle', 'fa-minus-circle');
+            } else {
+                icon.classList.replace('fa-minus-circle', 'fa-plus-circle');
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', function () {
             Chart.register(ChartDataLabels);
 
@@ -139,13 +214,13 @@
 
             const palette = {
                 trend: '#6366f1',
-                active: '#f59e0b', // Warna orange saat terpilih
+                active: '#f59e0b',
                 female: '#f9a8d4', male: '#7dd3fc',
                 blood: ['#3b5998', '#607d8b', '#8e44ad', '#00acc1', '#795548', '#546e7a', '#9575cd', '#455a64'],
                 normal: '#5ea897', inconclusive: '#d4a33d', abnormal: '#c96f6f'
             };
 
-            // 1. CHART TREN (LOGIKA KLIK)
+            // 1. CHART TREN
             const ctxTren = document.getElementById('chartTren');
             new Chart(ctxTren, {
                 type: 'bar',
@@ -161,6 +236,7 @@
                 options: {
                     responsive: true, maintainAspectRatio: false,
                     onClick: (event, elements) => {
+                        event.native.stopPropagation(); // Agar klik bar tidak menutup panel analisis
                         if (elements.length > 0) {
                             const index = elements[0].index;
                             const tahun = trenData[index].tahun;
@@ -171,9 +247,7 @@
                         legend: { display: false },
                         datalabels: { display: false },
                         tooltip: { 
-                            callbacks: { 
-                                label: (ctx) => 'Pasien: ' + formatNumber(ctx.raw) 
-                            } 
+                            callbacks: { label: (ctx) => 'Pasien: ' + formatNumber(ctx.raw) } 
                         }
                     },
                     scales: {
