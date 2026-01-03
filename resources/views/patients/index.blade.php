@@ -3,18 +3,16 @@
 @section('content')
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     
-    <div class="sm:flex sm:items-center justify-between">
+    <div class="sm:flex sm:items-center justify-between border-b border-slate-200 pb-5">
         <div>
             <h1 class="text-2xl font-bold text-slate-900">Data Pasien (Fact Table)</h1>
-            <p class="mt-1 text-sm text-slate-500">Monitoring data medis, durasi rawat, dan tagihan.</p>
-        </div>
-        <div class="mt-4 sm:mt-0">
-            <a href="{{ route('patients.create') }}" class="inline-flex items-center justify-center rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 transition-colors">
-                + Tambah Data
-            </a>
+            <p class="mt-1 text-sm text-slate-500 italic text-blue-600">
+                Mode: Non-Volatile 
+            </p>
         </div>
     </div>
 
+    {{-- Section Filter Tetap Dipertahankan untuk Analisis --}}
     <div class="mt-6 bg-white p-4 rounded-lg border border-slate-200 shadow-sm">
         <form action="{{ route('patients.index') }}" method="GET" class="flex flex-col md:flex-row gap-4">
             
@@ -61,58 +59,37 @@
                                 <th scope="col" class="px-3 py-3.5 text-left text-sm font-bold text-slate-900">Stay (Days)</th>
                                 <th scope="col" class="px-3 py-3.5 text-left text-sm font-bold text-slate-900">Billing Amount</th>
                                 <th scope="col" class="px-3 py-3.5 text-left text-sm font-bold text-slate-900">Test Results</th>
-                                <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6"><span class="sr-only">Aksi</span></th>
+                                {{-- Kolom Aksi Sudah Dihapus --}}
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-200 bg-white">
                             @forelse($patients as $patient)
-                            <tr class="hover:bg-slate-50 transition-colors">
-                                
+                            <tr class="hover:bg-slate-50 transition-colors text-slate-600">
                                 <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-slate-900 sm:pl-6">
                                     {{ $patient->Name }}
                                 </td>
-
-                                <td class="whitespace-nowrap px-3 py-4 text-sm text-slate-600">
+                                <td class="whitespace-nowrap px-3 py-4 text-sm">
                                     <span class="inline-flex items-center rounded-full bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10">
                                         {{ $patient->Medical_Condition }}
                                     </span>
                                 </td>
-
-                                <td class="whitespace-nowrap px-3 py-4 text-sm text-slate-500">
+                                <td class="whitespace-nowrap px-3 py-4 text-sm font-mono">
                                     {{ $patient->Date_of_Admission }}
                                 </td>
-
-                                <td class="whitespace-nowrap px-3 py-4 text-sm text-slate-500">
+                                <td class="whitespace-nowrap px-3 py-4 text-sm">
                                     {{ $patient->Length_of_Stay }} Hari
                                 </td>
-
-                                <td class="whitespace-nowrap px-3 py-4 text-sm font-medium text-slate-900">
+                                <td class="whitespace-nowrap px-3 py-4 text-sm font-semibold text-slate-900">
                                     {{ number_format($patient->Billing_Amount, 0, ',', '.') }}
                                 </td>
-
-                                <td class="whitespace-nowrap px-3 py-4 text-sm text-slate-500">
+                                <td class="whitespace-nowrap px-3 py-4 text-sm uppercase">
                                     {{ $patient->Test_Results }}
-                                </td>
-
-                                <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                                    <div class="flex justify-end gap-3">
-                                        <a href="{{ route('patients.edit', $patient->Name) }}" class="text-blue-600 hover:text-blue-900">Edit</a>
-                                        
-                                        <form action="{{ route('patients.destroy', $patient->Name) }}" method="POST" onsubmit="return confirm('Hapus data {{ $patient->Name }}?')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="text-red-600 hover:text-red-900 bg-transparent border-0 cursor-pointer">Hapus</button>
-                                        </form>
-                                    </div>
                                 </td>
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="7" class="px-3 py-8 text-center text-sm text-slate-500 bg-slate-50">
-                                    <div class="flex flex-col items-center justify-center">
-                                        <p class="font-medium text-slate-900">Tidak ada data ditemukan</p>
-                                        <p class="text-slate-500">Coba ubah kata kunci pencarian kamu.</p>
-                                    </div>
+                                <td colspan="6" class="px-3 py-12 text-center text-sm text-slate-500 bg-slate-50">
+                                    <p class="font-medium text-slate-900 italic">Data tidak tersedia di Data Warehouse.</p>
                                 </td>
                             </tr>
                             @endforelse

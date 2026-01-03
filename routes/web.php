@@ -7,6 +7,7 @@ use App\Http\Controllers\BillingAmountController;
 // Route::get('/', function () {
 //     return view('welcome');
 // });
-Route::get('/', [DashboardController::class, 'index']);
+// Tambahkan ->name('dashboard.index') di ujungnya
+Route::get('/', [DashboardController::class, 'index'])->name('dashboard.index');
 Route::resource('patients', PatientController::class);
 Route::get('/billing', [BillingAmountController::class, 'index'])->name('billing.index');
