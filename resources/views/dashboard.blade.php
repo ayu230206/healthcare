@@ -29,18 +29,26 @@
                 <p class="text-sm md:text-base text-slate-500 mt-1">Laporan visual data pasien dan kondisi medis periode 2019-2024.</p>
             </div>
 
+        
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-blue-500 flex flex-col justify-center">
                     <p class="text-xs font-bold text-blue-500 uppercase tracking-wider">Total Patients</p>
                     <p class="text-2xl font-bold text-slate-800">{{ number_format($tren->sum('total')) }}</p>
                 </div>
 
-                <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-green-500 flex flex-col justify-center">
-                    <p class="text-xs font-bold text-green-500 uppercase tracking-wider">Total Billing Amount</p>
-                    <p class="text-2xl font-bold text-slate-800">
-                        ${{ number_format($totalBilling / 1000000, 2) }} Million
-                    </p>
-                </div>
+                <a href="{{ route('billing.index') }}" class="block no-underline transition-transform hover:scale-105 active:scale-95">
+                    <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-green-500 flex flex-col justify-center h-full">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-xs font-bold text-green-500 uppercase tracking-wider">Total Billing Amount</p>
+                                <p class="text-2xl font-bold text-slate-800">
+                                    ${{ number_format($totalBilling / 1000000000000, 2) }} T
+                                </p>
+                            </div>
+                            <i class="fas fa-chevron-right text-slate-300"></i>
+                        </div>
+                    </div>
+                </a>
             </div>
 
             <div class="w-full">

@@ -9,7 +9,7 @@ class DashboardController extends Controller
 {
     public function index(): View
     {
-        
+
         // 1. TREN 
         $tren = DB::table('fact_patients')
             ->select(
@@ -23,7 +23,8 @@ class DashboardController extends Controller
         // 2. HASIL TES (SOLUSI FINAL - ANTI \r DAN SPASI)
         // Menggunakan LIKE 'Kata%' agar karakter sampah (\r, \n, spasi) di belakang diabaikan
         $hasilTes = DB::table('fact_patients')
-            ->select('Medical_Condition',
+            ->select(
+                'Medical_Condition',
                 DB::raw("SUM(CASE WHEN Test_Results LIKE 'Normal%' THEN 1 ELSE 0 END) as normal"),
                 DB::raw("SUM(CASE WHEN Test_Results LIKE 'Inconclusive%' THEN 1 ELSE 0 END) as inconclusive"),
                 DB::raw("SUM(CASE WHEN Test_Results LIKE 'Abnormal%' THEN 1 ELSE 0 END) as abnormal")
@@ -40,29 +41,35 @@ class DashboardController extends Controller
             ->orderBy('total', 'desc')
             ->get();
 
-        // 4. DEMOGRAFI (GENDER & AGE GROUP)
-        $demografi = DB::table('fact_patients')
-            ->join('dimensi_pasien', 'fact_patients.Name', '=', 'dimensi_pasien.Name') 
+        // 4. DEMOGRAFI (GENDER & AGE GROUP) - Langsung dari tabel dimensi
+        $demografi = DB::table('dimensi_pasien')
             ->select(
-                'dimensi_pasien.Age_Group', 
-                DB::raw("SUM(CASE WHEN dimensi_pasien.Gender = 'Female' THEN 1 ELSE 0 END) as female"),
-                DB::raw("SUM(CASE WHEN dimensi_pasien.Gender = 'Male' THEN 1 ELSE 0 END) as male")
+                'Age_Group',
+                DB::raw("SUM(CASE WHEN Gender = 'Female' THEN 1 ELSE 0 END) as female"),
+                DB::raw("SUM(CASE WHEN Gender = 'Male' THEN 1 ELSE 0 END) as male")
             )
-            ->groupBy('dimensi_pasien.Age_Group')
-            ->orderBy('dimensi_pasien.Age_Group', 'ASC')
+            ->groupBy('Age_Group')
+            ->orderBy('Age_Group', 'ASC')
             ->get();
-            
-        // 5. GOLONGAN DARAH (Query kamu sudah benar disini)
-        $darah = DB::table('fact_patients')
-            ->join('dimensi_pasien', 'fact_patients.Name', '=', 'dimensi_pasien.Name')
-            ->select('dimensi_pasien.Blood_Type', DB::raw('COUNT(*) as total'))
-            ->groupBy('dimensi_pasien.Blood_Type')
+
+        // 5. GOLONGAN DARAH - Langsung dari tabel dimensi
+        $darah = DB::table('dimensi_pasien')
+            ->select('Blood_Type', DB::raw('COUNT(*) as total'))
+            ->groupBy('Blood_Type')
+            ->orderBy('total', 'DESC')
             ->get();
-        
+
+        // 5. GOLONGAN DARAH (Langsung dari dimensi agar tidak double)
+        $darah = DB::table('dimensi_pasien')
+            ->select('Blood_Type', DB::raw('COUNT(*) as total'))
+            ->groupBy('Blood_Type')
+            ->orderBy('total', 'DESC') // Urutkan dari yang terbanyak
+            ->get();
+
         //6
         $totalBilling = DB::raw('SELECT SUM(Billing_Amount) as total FROM fact_patients');
-$totalBilling = DB::table('fact_patients')->sum('Billing_Amount');
+        $totalBilling = DB::table('fact_patients')->sum('Billing_Amount');
         // PERBAIKAN DISINI: Tambahkan 'darah' ke dalam compact
-        return view('dashboard', compact('tren', 'hasilTes', 'kondisi', 'demografi', 'darah','totalBilling'));
+        return view('dashboard', compact('tren', 'hasilTes', 'kondisi', 'demografi', 'darah', 'totalBilling'));
     }
 }
