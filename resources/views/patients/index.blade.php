@@ -62,7 +62,7 @@
                                 <th scope="col" class="px-3 py-3.5 text-left text-sm font-bold text-slate-900">Stay (Days)</th>
                                 <th scope="col" class="px-3 py-3.5 text-left text-sm font-bold text-slate-900">Billing Amount</th>
                                 <th scope="col" class="px-3 py-3.5 text-left text-sm font-bold text-slate-900">Test Results</th>
-                                {{-- Kolom Aksi Sudah Dihapus --}}
+
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-200 bg-white">

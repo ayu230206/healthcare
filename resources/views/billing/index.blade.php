@@ -158,7 +158,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    // FUNGSI TOGGLE ANALISIS
+
     function toggleAnalysis(id) {
         const content = document.getElementById(id);
         const icon = document.getElementById('icon-' + id);
@@ -166,7 +166,7 @@
         if (content.style.display === "none") {
             content.style.display = "block";
             icon.classList.replace('fa-plus-circle', 'fa-minus-circle');
-            icon.style.color = "#e74a3b"; // Change to red when open
+            icon.style.color = "#e74a3b";
         } else {
             content.style.display = "none";
             icon.classList.replace('fa-minus-circle', 'fa-plus-circle');
@@ -184,7 +184,7 @@
     const filteredOrange = '#f59e0b';
     const currentYear = "{{ request('tahun') }}";
 
-    // LINE CHART - ANNUAL REVENUE
+
     const billingData = {!! json_encode($billingByYear) !!};
     new Chart(document.getElementById('lineChartYear'), {
         type: 'line',

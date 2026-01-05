@@ -9,10 +9,9 @@ class DimensiWaktu extends Model
     protected $table = 'dimensi_waktu'; 
     protected $primaryKey = 'Date_of_Admission'; 
     public $incrementing = false;
-    protected $keyType = 'string'; // atau 'date'
+    protected $keyType = 'string'; 
     public $timestamps = false;
 
-    // HANYA IZINKAN KOLOM INI
     protected $fillable = [
         'Date_of_Admission'
     ];

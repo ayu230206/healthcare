@@ -12,26 +12,24 @@ class DashboardController extends Controller
 {
     $tahunDipilih = $request->query('tahun');
 
-    // --- 1. AMBIL SEMUA DATA FAKTA (Tanpa Distinct agar tidak hilang 5000 data) ---
+
     $queryBase = DB::table('fact_patients');
     if ($tahunDipilih) {
         $queryBase->whereYear('Date_of_Admission', $tahunDipilih);
     }
-    
-    // Ambil semua kolom yang dibutuhkan tanpa distinct()
+
     $factData = $queryBase->select('Name', 'Date_of_Admission', 'Billing_Amount', 'Medical_Condition', 'Test_Results')->get();
 
-    // --- 2. AMBIL DATA DIMENSI & MAPPING (Kunci agar tidak ngali 2) ---
     $dimensiRaw = DB::table('dimensi_pasien')->get();
     $mappedDimensi = [];
     foreach ($dimensiRaw as $d) {
-        $nameKey = trim(strtolower($d->Name)); // Gunakan lowercase agar lebih aman
+        $nameKey = trim(strtolower($d->Name)); 
         if (!isset($mappedDimensi[$nameKey])) {
             $mappedDimensi[$nameKey] = $d;
         }
     }
 
-    // --- 3. PROSES DATA ---
+
     $countDarah = [];
     $countDemo = [];
     $totalBilling = 0;
@@ -41,11 +39,11 @@ class DashboardController extends Controller
         $nameKey = trim(strtolower($f->Name));
         $dim = $mappedDimensi[$nameKey] ?? null;
 
-        // Hitung Golongan Darah
+
         $bt = $dim->Blood_Type ?? 'Unknown';
         $countDarah[$bt] = ($countDarah[$bt] ?? 0) + 1;
 
-        // Hitung Demografi
+
         $ag = $dim->Age_Group ?? 'Unknown';
         $gender = $dim->Gender ?? 'Unknown';
         
@@ -60,11 +58,11 @@ class DashboardController extends Controller
         }
     }
 
-    // Format untuk Chart
+
     $darah = collect($countDarah)->map(fn($val, $key) => (object)['Blood_Type' => $key, 'total' => $val])->values();
     $demografi = collect($countDemo)->map(fn($val, $key) => (object)['Age_Group' => $key, 'female' => $val['female'], 'male' => $val['male']])->sortBy('Age_Group')->values();
     
-    // Data Tren & Hasil Tes (Murni dari fact table)
+
     $tren = DB::table('fact_patients')->select(DB::raw('YEAR(Date_of_Admission) as tahun'), DB::raw('COUNT(*) as total'))->groupBy('tahun')->orderBy('tahun', 'ASC')->get();
     
     $hasilTes = (clone $queryBase)->select('Medical_Condition', 

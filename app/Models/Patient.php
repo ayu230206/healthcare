@@ -9,8 +9,8 @@ class Patient extends Model
     protected $table = 'fact_patients';
 
     protected $primaryKey = 'Name';
-    public $incrementing = false;   // Karena 'Name' bukan angka yang auto-increment
-    protected $keyType = 'string';  // Karena 'Name' adalah string (VARCHAR)
+    public $incrementing = false;   
+    protected $keyType = 'string';  
     public $timestamps = false;
     protected $fillable = [
         'Name',
@@ -22,7 +22,7 @@ class Patient extends Model
     ];
     public function dimensi()
 {
-    // Menghubungkan Fact Table ke Dimensi Table lewat kolom 'Name'
+
     return $this->belongsTo(DimensiPasien::class, 'Name', 'Name');
 }
 }

@@ -7,11 +7,10 @@ use Illuminate\Support\Facades\DB;
 
 class BillingAmountController extends Controller
 {
-    public function index(Request $request) // Tambahkan Request
+    public function index(Request $request) 
     {
         $tahunDipilih = $request->query('tahun');
 
-        // 1. Data Billing per Kondisi (DIFILTER TAHUN)
         $billingByCondition = DB::table('fact_patients')
             ->select('Medical_Condition', DB::raw('SUM(Billing_Amount) as total'))
             ->when($tahunDipilih, function ($query, $tahunDipilih) {
@@ -21,7 +20,6 @@ class BillingAmountController extends Controller
             ->orderBy('total', 'DESC')
             ->get();
 
-        // 2. Data Tren Tahunan (JANGAN DIFILTER agar grafiknya tetap utuh)
         $billingByYear = DB::table('fact_patients')
             ->select(
                 DB::raw('YEAR(Date_of_Admission) as tahun'),
