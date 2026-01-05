@@ -63,7 +63,8 @@
                             Laporan visual data pasien periode 2019-2024.
                         </p>
                         @if(request('tahun'))
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800 border border-amber-200">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                             bg-amber-100 text-amber-800 border border-amber-200">
                                 <i class="fas fa-filter mr-1"></i> Terfilter: {{ request('tahun') }}
                             </span>
                         @endif
@@ -73,7 +74,8 @@
                 <div class="flex items-center gap-3">
                     @if(request('tahun'))
                         <a href="{{ route('dashboard.index') }}" 
-                           class="flex items-center gap-2 px-4 py-2 bg-rose-500 hover:bg-rose-600 text-white text-sm font-semibold rounded-lg shadow-sm transition-all">
+                           class="flex items-center gap-2 px-4 py-2 bg-rose-500 hover:bg-rose-600 
+                           text-white text-sm font-semibold rounded-lg shadow-sm transition-all">
                             Reset Filter
                         </a>
                     @endif
@@ -93,7 +95,7 @@
                             <div>
                                 <p class="text-xs font-bold text-green-500 uppercase tracking-wider">Total Billing Amount</p>
                                 <p class="text-2xl font-bold text-slate-800">
-                                    ${{ number_format($totalBilling / 1000000000000, 2) }} T
+                                    ${{ number_format($totalBilling / 1000000000000000, 2) }} Q
                                 </p>
                             </div>
                             <i class="fas fa-chevron-right text-slate-300"></i>

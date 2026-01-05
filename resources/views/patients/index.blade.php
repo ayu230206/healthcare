@@ -12,19 +12,20 @@
         </div>
     </div>
 
-    {{-- Section Filter Tetap Dipertahankan untuk Analisis --}}
     <div class="mt-6 bg-white p-4 rounded-lg border border-slate-200 shadow-sm">
         <form action="{{ route('patients.index') }}" method="GET" class="flex flex-col md:flex-row gap-4">
             
             <div class="relative flex-grow">
                 <input type="text" name="search" value="{{ request('search') }}" 
-                       class="block w-full rounded-md border-slate-300 pl-4 pr-10 py-2 text-sm focus:border-blue-500 focus:ring-blue-500 border shadow-sm" 
+                       class="block w-full rounded-md border-slate-300 pl-4 pr-10
+                        py-2 text-sm focus:border-blue-500 focus:ring-blue-500 border shadow-sm" 
                        placeholder="Cari Nama Pasien...">
             </div>
 
             <div class="min-w-[200px]">
                 <select name="condition" onchange="this.form.submit()" 
-                        class="block w-full rounded-md border-slate-300 py-2 pl-3 pr-10 text-base focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm border shadow-sm">
+                        class="block w-full rounded-md border-slate-300 py-2 pl-3 pr-10 text-base 
+                        focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm border shadow-sm">
                     <option value="">Semua Kondisi</option>
                     @foreach($conditions as $cond)
                         <option value="{{ $cond }}" {{ request('condition') == $cond ? 'selected' : '' }}>
@@ -34,12 +35,14 @@
                 </select>
             </div>
 
-            <button type="submit" class="rounded-md bg-slate-100 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-200 border border-slate-300">
+            <button type="submit" class="rounded-md bg-slate-100 px-4 py-2 text-sm font-medium 
+            text-slate-700 hover:bg-slate-200 border border-slate-300">
                 Filter
             </button>
             
             @if(request()->filled('search') || request()->filled('condition'))
-                <a href="{{ route('patients.index') }}" class="rounded-md bg-red-50 px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-100 border border-red-200 flex items-center">
+                <a href="{{ route('patients.index') }}" class="rounded-md bg-red-50 px-4 py-2 text-sm 
+                font-medium text-red-600 hover:bg-red-100 border border-red-200 flex items-center">
                     Reset
                 </a>
             @endif
@@ -69,7 +72,8 @@
                                     {{ $patient->Name }}
                                 </td>
                                 <td class="whitespace-nowrap px-3 py-4 text-sm">
-                                    <span class="inline-flex items-center rounded-full bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10">
+                                    <span class="inline-flex items-center rounded-full bg-blue-50 px-2 py-1 
+                                    text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10">
                                         {{ $patient->Medical_Condition }}
                                     </span>
                                 </td>

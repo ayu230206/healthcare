@@ -99,7 +99,8 @@
                         <div class="p-4 rounded-lg border-left-warning" style="background-color: #fffaf0; border-left: 5px solid #f59e0b;">
                             <h6 class="font-weight-bold text-warning mb-2">💡 Analisis Biaya Medis:</h6>
                             <p class="text-sm text-dark mb-0">
-                                Distribusi billing menunjukkan bahwa kondisi medis seperti <strong>Diabetes</strong> dan <strong>Hypertension</strong> seringkali menghasilkan total tagihan yang lebih tinggi. 
+                                Distribusi billing menunjukkan bahwa kondisi medis seperti <strong>Diabetes</strong> dan <strong>Hypertension</strong> 
+                                seringkali menghasilkan total tagihan yang lebih tinggi. 
                                 Hal ini mengindikasikan bahwa penyakit kronis memerlukan sumber daya medis dan masa perawatan yang lebih intensif dibandingkan kondisi lainnya.
                                 {{ request('tahun') ? 'Pada tahun '.request('tahun').', proporsi biaya ini tetap menjadi kontributor utama pendapatan.' : '' }}
                             </p>
